@@ -12,6 +12,8 @@ goog.require('lime.style');
  */
 lime.Renderer.DOM = new lime.Renderer();
 
+lime.Renderer.DOM.ANTIALIAS_OFFSET = new goog.math.Coordinate(0, 0);
+
 /**
  * Update the DOM tree relations of the element.
  * @this {lime.Node}
@@ -82,10 +84,12 @@ lime.Renderer.DOM.drawSizePosition = function () {
 
     if (this.domElement != this.containerElement) {
         if (!this.transitionsActiveSet_[lime.Transition.POSITION] && !this.transitionsActiveSet_[lime.Transition.SCALE] && !this.transitionsActiveSet_[lime.Transition.ROTATION])
-        lime.style.setTransform(this.containerElement,
-                new lime.style.Transform()
-                    .set3DAllowed(enable3D)
-                    .translate(ax-so, ay-so));
+        lime.style.setTransform(
+            this.containerElement, new lime.style.Transform()
+                .set3DAllowed(enable3D)
+                .translate(
+                    ax-so-lime.Renderer.DOM.ANTIALIAS_OFFSET.x,
+                    ay-so-lime.Renderer.DOM.ANTIALIAS_OFFSET.y));
     }
 
     if (this.mask_ != this.activeMask_) {
@@ -114,7 +118,10 @@ lime.Renderer.DOM.drawSizePosition = function () {
         rotation = -this.transitionsActive_[lime.Transition.ROTATION];
     }
 
-    transform.translate(px, py).scale(realScale.x, realScale.y).rotate(rotation);
+    transform.translate(
+        px-lime.Renderer.DOM.ANTIALIAS_OFFSET.x,
+        py-lime.Renderer.DOM.ANTIALIAS_OFFSET.y)
+        .scale(realScale.x, realScale.y).rotate(rotation);
 
     if (!this.transitionsActiveSet_[lime.Transition.POSITION] && !this.transitionsActiveSet_[lime.Transition.SCALE] && !this.transitionsActiveSet_[lime.Transition.ROTATION]) {
        //     console.log('transform',this.transition_position_set_,this.transition_position_);
