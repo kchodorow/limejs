@@ -4,11 +4,9 @@ goog.require('lime.Sprite');
 
 goog.require('broccoli.Map');
 
-broccoli.Camera = function() {
+broccoli.Camera = function(map) {
     lime.Sprite.call(this);
-
-    this.map_ = new broccoli.Map();
-    this.snapshot(0, 0);
+    this.map_ = map;
 };
 
 goog.inherits(broccoli.Camera, lime.Sprite);
@@ -31,15 +29,19 @@ broccoli.Camera.prototype.snapshot = function(x, y) {
 broccoli.Camera.prototype.drawAcre_ = function(acre_x, acre_y, acre) {
     for (var i = 0; i < broccoli.Acre.WIDTH; ++i) {
         for (var j = 0; j < broccoli.Acre.HEIGHT; ++j) {
+            var square = acre.getSquare(i, j);
             var x = acre_x * broccoli.Camera.ACRE_WIDTH_PX +
                     i * broccoli.Camera.SQUARE_WIDTH_PX;
             var y = acre_y * broccoli.Camera.ACRE_HEIGHT_PX +
                     j * broccoli.Camera.SQUARE_HEIGHT_PX;
-            this.appendChild(
-                new lime.Sprite()
+            var sprite = new lime.Sprite()
                     .setSize(broccoli.Camera.SQUARE_WIDTH_PX,
                              broccoli.Camera.SQUARE_HEIGHT_PX)
-                    .setFill('#eee').setPosition(x, y).setStroke(1, '#000'));
+                    .setFill('#eee').setPosition(x, y).setStroke(1, '#000');
+            if (square.contains('tree')) {
+                sprite.setFill('#0f0');
+            }
+            this.appendChild(sprite);
         }
     }
 };
