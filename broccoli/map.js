@@ -14,6 +14,10 @@ broccoli.Map = function(acre_generator) {
 broccoli.Map.WIDTH = 10;
 broccoli.Map.HEIGHT = 10;
 
+broccoli.Map.prototype.has_acre = function(acre_x, acre_y) {
+    return this.acre_.contains(acre_x, acre_y);
+};
+
 broccoli.Map.prototype.acre = function(acre_x, acre_y) {
     var acre = this.acre_.get(acre_x, acre_y);
     if (!acre) {

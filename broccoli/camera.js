@@ -22,8 +22,10 @@ broccoli.Camera.prototype.snapshot = function(x, y) {
 
     for (var i = -1; i <= 1; ++i) {
         for (var j = -1; j <= 1; ++j) {
-            var acre = this.map_.acre(acre_x + i, acre_y + j);
-            this.drawAcre_(acre_x + i, acre_y + j, acre);
+            if (!this.map_.has_acre(acre_x + i, acre_y + j)) {
+                var acre = this.map_.acre(acre_x + i, acre_y + j);
+                this.drawAcre_(acre_x + i, acre_y + j, acre);
+            }
         }
     }
 
