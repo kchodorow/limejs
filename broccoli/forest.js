@@ -38,10 +38,19 @@ goog.inherits(broccoli.Forest, lime.Scene);
 
 broccoli.Forest.prototype.wasd = function(dir, event) {
     var pos = this.player_.position();
-    this.player_.set_position(
-        new goog.math.Coordinate(pos.x + dir.x, pos.y + dir.y));
+    var desired_pos = new goog.math.Coordinate(pos.x + dir.x, pos.y + dir.y);
+    if (!this.canMoveTo_(desired_pos)) {
+        // Trying to run into a tree or something.
+        return;
+    }
+
+    this.player_.set_position(desired_pos);
     for (var i = 0; i < this.enemy_.length; ++i) {
         this.enemy_[i].step();
     }
     this.camera_.snapshot(0, 0);
+};
+
+broccoli.Forest.prototype.canMoveTo_ = function(pos) {
+    return this.token_registry_.getTokenAt(pos) == null;
 };
