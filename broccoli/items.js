@@ -6,6 +6,7 @@ goog.require('broccoli.Token');
 
 broccoli.Tree = function() {
     goog.base(this);
+    this.id_ = "tree";
     this.sprite_ = new lime.Sprite().setSize(30, 30).setFill('#0f0');
 };
 

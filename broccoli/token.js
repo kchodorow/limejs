@@ -38,6 +38,10 @@ broccoli.Token = function() {
 
 broccoli.Token.prototype.doNothing = function() {};
 
+broccoli.Token.prototype.id = function() {
+    return this.id_;
+};
+
 broccoli.Token.prototype.set_dirty = function(dirty) {
     this.dirty_ = dirty;
 };

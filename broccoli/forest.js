@@ -39,18 +39,21 @@ goog.inherits(broccoli.Forest, lime.Scene);
 broccoli.Forest.prototype.wasd = function(dir, event) {
     var pos = this.player_.position();
     var desired_pos = new goog.math.Coordinate(pos.x + dir.x, pos.y + dir.y);
-    if (!this.canMoveTo_(desired_pos)) {
-        // Trying to run into a tree or something.
-        return;
+    var token = this.token_registry_.getTokenAt(desired_pos);
+    if (token != null) {
+        if (token.id() == 'enemy') {
+            this.player_.attack(token);
+            desired_pos = pos;
+        } else {
+            // Trying to run into a tree or something.
+            return;
+        }
     }
 
+    // Normal movement
     this.player_.set_position(desired_pos);
     for (var i = 0; i < this.enemy_.length; ++i) {
         this.enemy_[i].step();
     }
     this.camera_.snapshot(0, 0);
-};
-
-broccoli.Forest.prototype.canMoveTo_ = function(pos) {
-    return this.token_registry_.getTokenAt(pos) == null;
 };
