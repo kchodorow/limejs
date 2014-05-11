@@ -27,6 +27,8 @@ broccoli.Forest = function() {
     // Handle input.
     this.keyboard_ = new lib.Keyboard(this);
     this.keyboard_.bindWasd(goog.bind(this.wasd, this));
+    this.keyboard_.bindKeyDown(
+        goog.events.KeyCodes.SPACE, goog.bind(this.rest, this));
 };
 
 goog.inherits(broccoli.Forest, lime.Scene);
@@ -38,10 +40,16 @@ broccoli.Forest.prototype.wasd = function(dir, event) {
     if (!token.empty()) {
         // Trying to run into a tree or something.
         return;
-    } else {
-        this.player_.set_position(desired_pos);
     }
+    this.player_.set_position(desired_pos);
+    this.runStep_(pos);
+};
 
+broccoli.Forest.prototype.rest = function(event) {
+    this.runStep_(this.player_.position());
+};
+
+broccoli.Forest.prototype.runStep_ = function(pos) {
     var active_tokens = this.token_registry_.activeTokens();
     for (var i = 0; i < active_tokens.length; ++i) {
         // Check if player is nearby.
